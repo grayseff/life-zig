@@ -2,6 +2,7 @@ const std = @import("std");
 const c = @cImport({
     @cInclude("SDL3/SDL.h");
 });
+const Board = @import("board.zig").Board;
 
 pub const Renderer = struct {
     window: *c.SDL_Window,

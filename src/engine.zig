@@ -25,8 +25,30 @@ pub const Engine = struct {
         self.renderer.deinit();
         self.board.deinit();
     }
+    // fn update(self: *Engine) void {
+
+    // }
     pub fn run(self: *Engine) void {
-        self.renderer.draw();
-        c.SDL_Delay(3000);
+        // c.SDL_Delay(3000);
+        var running = true;
+
+        while (running) {
+            //events
+            var event: c.SDL_Event = undefined;
+            while (c.SDL_PollEvent(&event)) {
+                //handle event
+                switch (event.type) {
+                    c.SDL_EVENT_QUIT => running = false,
+                    c.SDL_EVENT_KEY_DOWN => {
+                        if (event.key.key == c.SDLK_SPACE) {
+                            self.board.step();
+                        }
+                    },
+                    else => {},
+                }
+            }
+            //draw
+            self.renderer.draw();
+        }
     }
 };

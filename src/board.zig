@@ -71,12 +71,15 @@ pub const Board = struct {
     pub fn countNeighbours(self: *const Board, x: usize, y: usize) u8 {
         var count: u8 = 0;
         for (NEIGHBOURLIST) |offset| {
-           const ny = y + offset[0];
-           const nx = x + offset[1];
+           const ny = @as(isize, @intCast(y)) + offset[0];
+           const nx = @as(isize,@intCast(x)) + offset[1];
            if (nx < 0 or ny < 0 or nx >= self.width or ny >= self.height){
                continue;
            }
-           if (self.getCell(nx, ny) ) {
+           if (self.getCell(
+                   @as(usize,@intCast(nx)),
+                   @as(usize,@intCast(ny)),
+                   )) {
                count += 1;
            }
         }
