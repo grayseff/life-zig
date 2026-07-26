@@ -1,18 +1,15 @@
 const std = @import("std");
 
 const NEIGHBOURLIST = [_][2]isize{
-    .{-1, -1 },
-    .{-1, 0 },
-    .{-1, 1 },
-    .{0, -1},
-    .{0, 1 },
-    .{1, -1},
-    .{1, 0 },
-    .{1, 1 },
+    .{ -1, -1 },
+    .{ -1, 0 },
+    .{ -1, 1 },
+    .{ 0, -1 },
+    .{ 0, 1 },
+    .{ 1, -1 },
+    .{ 1, 0 },
+    .{ 1, 1 },
 };
-
-
-
 
 pub const Board = struct {
     width: usize,
@@ -65,23 +62,39 @@ pub const Board = struct {
         const idx = self.index(x, y);
         return self.current[idx];
     }
-
-// Below are the board operations:
+    pub fn clearBoard(self: *Board) void {
+        for (0..self.height) |j| {
+            for (0..self.width) |i| {
+                self.setCell(i, j, false);
+            }
+        }
+    }
+    // Below are the board operations:
 
     pub fn countNeighbours(self: *const Board, x: usize, y: usize) u8 {
         var count: u8 = 0;
         for (NEIGHBOURLIST) |offset| {
-           const ny = @as(isize, @intCast(y)) + offset[0];
-           const nx = @as(isize,@intCast(x)) + offset[1];
-           if (nx < 0 or ny < 0 or nx >= self.width or ny >= self.height){
-               continue;
-           }
-           if (self.getCell(
-                   @as(usize,@intCast(nx)),
-                   @as(usize,@intCast(ny)),
-                   )) {
-               count += 1;
-           }
+            var ny = @as(isize, @intCast(y)) + offset[0];
+            var nx = @as(isize, @intCast(x)) + offset[1];
+            if (nx < 0) {
+                nx = @as(isize, @intCast(self.width)) - 1;
+            } else if (nx >= self.width) {
+                nx = 0;
+            }
+            if (ny < 0) {
+                ny = @as(isize, @intCast(self.height)) - 1;
+            } else if (ny >= self.height) {
+                ny = 0;
+            }
+            // if (nx < 0 or ny < 0 or nx >= self.width or ny >= self.height){
+            //     continue;
+            // }
+            if (self.getCell(
+                @as(usize, @intCast(nx)),
+                @as(usize, @intCast(ny)),
+            )) {
+                count += 1;
+            }
         }
         return count;
     }
@@ -89,10 +102,10 @@ pub const Board = struct {
     pub fn step(self: *Board) void {
         for (0..self.height) |i| {
             for (0..self.width) |j| {
-                const alive = self.getCell(j, i );
-                const neighbours: u8 = self.countNeighbours(j, i );
-                const idx = self.index(j, i);   
-                if (alive and (neighbours == 2 or neighbours == 3 )) {
+                const alive = self.getCell(j, i);
+                const neighbours: u8 = self.countNeighbours(j, i);
+                const idx = self.index(j, i);
+                if (alive and (neighbours == 2 or neighbours == 3)) {
                     self.next[idx] = true;
                 } else if (alive) {
                     self.next[idx] = false;

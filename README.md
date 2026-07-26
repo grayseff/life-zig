@@ -97,7 +97,12 @@ Each component should have a clearly defined purpose and minimal knowledge of th
 * [x] Neighbour counting
 * [x] Simulation step (double-buffered)
 * [x] SDL rendering
-* [ ] Engine/game loop
-* [ ] Input handling
-* [ ] Simulation controls
-* [ ] Pattern loading and editing
+* [x] Engine/game loop
+* [x] Input handling
+* [x] Simulation controls
+* [-] Pattern loading and editing
+---
+# Final thoughts
+
+I enjoy Zig, I prefer manual memory management to Rust, I could spend a long time on a fancy, feature complete, beautiful game with sprites, or take this as achieving the goal I set for myself and move on. 
+

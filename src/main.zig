@@ -9,10 +9,7 @@ pub fn main(init: std.process.Init) !void {
         50,
         20,
         20,
-        );
+    );
     defer engine.deinit();
     engine.run();
-
-
 }
-
