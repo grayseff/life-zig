@@ -28,6 +28,20 @@ pub const Engine = struct {
     // fn update(self: *Engine) void {
 
     // }
+    fn mouseToBoard(self: *Engine, mouse_x: f32 , mouse_y:f32) ?struct { x: usize, y: usize} {
+        const cell_size = @as(f32, @floatFromInt(self.renderer.cell_size));
+        const board_x = @as(usize, @intFromFloat(mouse_x / cell_size));
+        const board_y = @as(usize, @intFromFloat(mouse_y / cell_size));
+    
+        if (board_x < self.board.width and board_y < self.board.height) {
+           return .{
+               .x = @intCast(board_x),
+               .y = @intCast(board_y),
+           }; 
+       } else {
+           return null;
+       }
+    } 
     pub fn run(self: *Engine) void {
         // c.SDL_Delay(3000);
         var running = true;
@@ -44,11 +58,18 @@ pub const Engine = struct {
                             self.board.step();
                         }
                     },
+                    c.SDL_EVENT_MOUSE_BUTTON_DOWN => {
+                        const mouse_x = event.button.x;
+                        const mouse_y = event.button.y;
+                        if (self.mouseToBoard(mouse_x, mouse_y)) |pos| {
+                            self.board.flipCell(pos.x,pos.y);
+                        }
+                    },
                     else => {},
                 }
             }
             //draw
-            self.renderer.draw();
+            self.renderer.draw(&self.board);
         }
     }
 };
